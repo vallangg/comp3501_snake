@@ -5,7 +5,8 @@
 # ************************************
 
 """
-     This code was taken from BroCode, a coder on youtube. The original source can be found here: https://www.youtube.com/watch?v=bfRwxS5d0SI
+     The original code was taken from BroCode, a coder on youtube. The original source can be found here: https://www.youtube.com/watch?v=bfRwxS5d0SI
+     Various edits and changes have been made to this code to make it fir out needs. These areas will be marked with comments.
 """
 
 from tkinter import *
@@ -18,7 +19,7 @@ GAME_WIDTH = 700
 
 GAME_HEIGHT = 700
 
-SPEED = 50
+SPEED = 100
 
 SPACE_SIZE = 50
 
