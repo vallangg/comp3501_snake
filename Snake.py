@@ -1,197 +1,154 @@
 """
-    This code was taken from https://www.geeksforgeeks.org/snake-game-in-python-using-pygame-module/
-    The code remains largely unchanged, all edits that were made are commented as such 
+    This code was taken from the github linked here: https://gist.github.com/StanislavPetrovV/bb36787efbc30cd0921f0cbaa05244f1
+    Author: StanislavPetrovV
+    All edits that have been made by this team are commented as such
 """
 
-# importing libraries
-import pygame
-import time
-import random
- 
-snake_speed = 15
- 
-# Window size
-window_x = 720
-window_y = 480
- 
-# defining colors
-black = pygame.Color(0, 0, 0)
-white = pygame.Color(255, 255, 255)
-red = pygame.Color(255, 0, 0)
-green = pygame.Color(0, 255, 0)
-blue = pygame.Color(0, 0, 255)
- 
-# Initialising pygame
-pygame.init()
- 
-# Initialise game window
-pygame.display.set_caption('GeeksforGeeks Snakes')
-game_window = pygame.display.set_mode((window_x, window_y))
- 
-# FPS (frames per second) controller
-fps = pygame.time.Clock()
- 
-# defining snake default position
-snake_position = [100, 50]
- 
-# defining first 4 blocks of snake body
-snake_body = [[100, 50],
-              [90, 50],
-              [80, 50],
-              [70, 50]
-              ]
+import pygame as pg
+import sys
+from random import randrange
 
-def generate_fruit(): # this is the function that will generate the fruits on the maps. This fucntion is costom but the code is orignal
-    # fruit position
-    fruit_position = [random.randrange(1, (window_x//10)) * 10, 
-                    random.randrange(1, (window_y//10)) * 10]
-    
-    return fruit_position
-    
+vec2 = pg.math.Vector2
 
- 
 
- 
-# displaying Score function
-def show_score(choice, color, font, size, score):
-   
-    # creating font object score_font
-    score_font = pygame.font.SysFont(font, size)
-     
-    # create the display surface object 
-    # score_surface
-    score_surface = score_font.render('Score : ' + str(score), True, color)
-     
-    # create a rectangular object for the text
-    # surface object
-    score_rect = score_surface.get_rect()
-     
-    # displaying text
-    game_window.blit(score_surface, score_rect)
- 
-# game over function
-def game_over(score: int):
-   
-    # creating font object my_font
-    my_font = pygame.font.SysFont('times new roman', 50)
-     
-    # creating a text surface on which text 
-    # will be drawn
-    game_over_surface = my_font.render(
-        'Your Score is : ' + str(score), True, red)
-     
-    # create a rectangular object for the text 
-    # surface object
-    game_over_rect = game_over_surface.get_rect()
-     
-    # setting position of the text
-    game_over_rect.midtop = (window_x/2, window_y/4)
-     
-    # blit will draw the text on screen
-    game_window.blit(game_over_surface, game_over_rect)
-    pygame.display.flip()
-     
-    # after 2 seconds we will quit the program
-    time.sleep(2)
-     
-    # deactivating pygame library
-    pygame.quit()
-     
-    # quit the program
-    quit()
- 
-def snake_game(): # define the function that will be used and called in other files. This is costom code
-
-    # setting default snake direction towards
-    # right
-    direction = 'RIGHT'
-    change_to = direction
-    
-    # initial score
-    score = 0
-
-    fruit_position = generate_fruit() #  generate the location of the fruit. THIS IS CUSTOM CODE
-
-    fruit_spawn = True # set the fruit to respawn. THIS IS CUSTOM CODE
-
-    # Main Function
-    while True:
+class Snake:
+    def __init__(self, game):
+        self.game = game
+        self.size = game.TILE_SIZE
+        self.rect = pg.rect.Rect([0, 0, game.TILE_SIZE - 2, game.TILE_SIZE - 2])
+        self.range = self.size // 2, self.game.WINDOW_SIZE - self.size // 2, self.size
+        self.rect.center = self.get_random_position()
+        self.direction = vec2(0, 0)
+        self.step_delay = 100  # milliseconds
+        self.time = 0
+        self.length = 1
+        self.segments = []
+        self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}
+        self.score = 0 # CUSTOM CODE. keep track of the score of the snake
         
-        # handling key events
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    change_to = 'UP'
-                if event.key == pygame.K_DOWN:
-                    change_to = 'DOWN'
-                if event.key == pygame.K_LEFT:
-                    change_to = 'LEFT'
-                if event.key == pygame.K_RIGHT:
-                    change_to = 'RIGHT'
-    
-        # If two keys pressed simultaneously
-        # we don't want snake to move into two 
-        # directions simultaneously
-        if change_to == 'UP' and direction != 'DOWN':
-            direction = 'UP'
-        if change_to == 'DOWN' and direction != 'UP':
-            direction = 'DOWN'
-        if change_to == 'LEFT' and direction != 'RIGHT':
-            direction = 'LEFT'
-        if change_to == 'RIGHT' and direction != 'LEFT':
-            direction = 'RIGHT'
-    
-        # Moving the snake
-        if direction == 'UP':
-            snake_position[1] -= 10
-        if direction == 'DOWN':
-            snake_position[1] += 10
-        if direction == 'LEFT':
-            snake_position[0] -= 10
-        if direction == 'RIGHT':
-            snake_position[0] += 10
-    
-        # Snake body growing mechanism
-        # if fruits and snakes collide then scores
-        # will be incremented by 10
-        snake_body.insert(0, list(snake_position))
-        if snake_position[0] == fruit_position[0] and snake_position[1] == fruit_position[1]:
-            score += 10
-            fruit_spawn = False
-        else:
-            snake_body.pop()
-            
-        if not fruit_spawn:
-            fruit_position = [random.randrange(1, (window_x//10)) * 10, 
-                            random.randrange(1, (window_y//10)) * 10]
-            
-        fruit_spawn = True
-        game_window.fill(black)
-        
-        for pos in snake_body:
-            pygame.draw.rect(game_window, green,
-                            pygame.Rect(pos[0], pos[1], 10, 10))
-        pygame.draw.rect(game_window, white, pygame.Rect(
-            fruit_position[0], fruit_position[1], 10, 10))
-    
-        # Game Over conditions
-        if snake_position[0] < 0 or snake_position[0] > window_x-10:
-            game_over(score)
-        if snake_position[1] < 0 or snake_position[1] > window_y-10:
-            game_over(score)
-    
-        # Touching the snake body
-        for block in snake_body[1:]:
-            if snake_position[0] == block[0] and snake_position[1] == block[1]:
-                game_over(score)
-    
-        # displaying score continuously
-        show_score(1, white, 'times new roman', 20, score)
-    
-        # Refresh game screen
-        pygame.display.update()
-    
-        # Frame Per Second /Refresh Rate
-        fps.tick(snake_speed)
+    def control(self, event):
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_w and self.directions[pg.K_w]:
+                self.direction = vec2(0, -self.size)
+                self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
 
-snake_game()
+            if event.key == pg.K_s and self.directions[pg.K_s]:
+                self.direction = vec2(0, self.size)
+                self.directions = {pg.K_w: 0, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}
+
+            if event.key == pg.K_a and self.directions[pg.K_a]:
+                self.direction = vec2(-self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 0}
+
+            if event.key == pg.K_d and self.directions[pg.K_d]:
+                self.direction = vec2(self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
+
+    def delta_time(self):
+        time_now = pg.time.get_ticks()
+        if time_now - self.time > self.step_delay:
+            self.time = time_now
+            return True
+        return False
+
+    def get_random_position(self):
+        return [randrange(*self.range), randrange(*self.range)]
+
+    def check_borders(self):
+        if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
+            self.game.new_game()
+        if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
+            self.game.new_game()
+
+    def check_food(self):
+        if self.rect.center == self.game.food.rect.center:
+            self.game.food.rect.center = self.get_random_position()
+            self.length += 1
+            self.score += 10 # CUSTOM CODE. if the snake eats the food add 10 points to the score
+            print(self.score)
+
+    def check_selfeating(self):
+        if len(self.segments) != len(set(segment.center for segment in self.segments)):
+            self.game.new_game()
+
+    def move(self):
+        if self.delta_time():
+            self.rect.move_ip(self.direction)
+            self.segments.append(self.rect.copy())
+            self.segments = self.segments[-self.length:]
+
+    def update(self):
+        self.check_selfeating()
+        self.check_borders()
+        self.check_food()
+        self.move()
+
+    def draw(self):
+        [pg.draw.rect(self.game.screen, 'green', segment) for segment in self.segments]
+    
+    def return_score(self)->int:
+        return self.score # CUSTOM CODE. return the score of the current game of snake
+
+
+class Food:
+    def __init__(self, game):
+        self.game = game
+        self.size = game.TILE_SIZE
+        self.rect = pg.rect.Rect([0, 0, game.TILE_SIZE - 2, game.TILE_SIZE - 2])
+        self.rect.center = self.game.snake.get_random_position()
+
+    def draw(self):
+        pg.draw.rect(self.game.screen, 'red', self.rect)
+
+
+class Game:
+    def __init__(self):
+        pg.init()
+        self.WINDOW_SIZE = 1000
+        self.TILE_SIZE = 50
+        self.screen = pg.display.set_mode([self.WINDOW_SIZE] * 2)
+        self.clock = pg.time.Clock()
+        self.new_game()
+
+
+    def draw_grid(self):
+        [pg.draw.line(self.screen, [50] * 3, (x, 0), (x, self.WINDOW_SIZE))
+                                             for x in range(0, self.WINDOW_SIZE, self.TILE_SIZE)]
+        [pg.draw.line(self.screen, [50] * 3, (0, y), (self.WINDOW_SIZE, y))
+                                             for y in range(0, self.WINDOW_SIZE, self.TILE_SIZE)]
+
+    def new_game(self):
+        self.snake = Snake(self)
+        self.food = Food(self)
+
+    def update(self):
+        self.snake.update()
+        pg.display.flip()
+        self.clock.tick(60)
+
+    def draw(self):
+        self.screen.fill('black')
+        self.draw_grid()
+        self.food.draw()
+        self.snake.draw()
+
+    def check_event(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            # snake control
+            self.snake.control(event)
+
+    def run(self):
+        while True:
+            self.check_event()
+            self.update()
+            self.draw()
+            print(self.snake.return_score())# CUSTOM CODE. return the score of the snake
+    
+
+
+
+game = Game()
+game.run()
