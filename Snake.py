@@ -1,336 +1,197 @@
-# ************************************
-
-# Python Snakec
-
-# ************************************
-
 """
-     The original code was taken from BroCode, a coder on youtube. The original source can be found here: https://www.youtube.com/watch?v=bfRwxS5d0SI
-     Various edits and changes have been made to this code to make it fir out needs. These areas will be marked with comments.
+    This code was taken from https://www.geeksforgeeks.org/snake-game-in-python-using-pygame-module/
+    The code remains largely unchanged, all edits that were made are commented as such 
 """
 
-from tkinter import *
-
+# importing libraries
+import pygame
+import time
 import random
-
-
-
-GAME_WIDTH = 700
-
-GAME_HEIGHT = 700
-
-SPEED = 100
-
-SPACE_SIZE = 50
-
-BODY_PARTS = 3
-
-SNAKE_COLOR = "#00FF00"
-
-FOOD_COLOR = "#FF0000"
-
-BACKGROUND_COLOR = "#000000"
-
-
-
-
-
-class Snake:
-
-
-
-    def __init__(self):
-
-        self.body_size = BODY_PARTS
-
-        self.coordinates = []
-
-        self.squares = []
-
-
-
-        for i in range(0, BODY_PARTS):
-
-            self.coordinates.append([0, 0])
-
-
-
-        for x, y in self.coordinates:
-
-            square = canvas.create_rectangle(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=SNAKE_COLOR, tag="snake")
-
-            self.squares.append(square)
-
-
-
-
-
-class Food:
-
-
-
-    def __init__(self):
-
-
-
-        x = random.randint(0, (GAME_WIDTH / SPACE_SIZE)-1) * SPACE_SIZE
-
-        y = random.randint(0, (GAME_HEIGHT / SPACE_SIZE) - 1) * SPACE_SIZE
-
-
-
-        self.coordinates = [x, y]
-
-
-
-        canvas.create_oval(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=FOOD_COLOR, tag="food")
-
-
-
-
-
-def next_turn(snake, food):
-
-
-
-    x, y = snake.coordinates[0]
-
-
-
-    if direction == "up":
-
-        y -= SPACE_SIZE
-
-    elif direction == "down":
-
-        y += SPACE_SIZE
-
-    elif direction == "left":
-
-        x -= SPACE_SIZE
-
-    elif direction == "right":
-
-        x += SPACE_SIZE
-
-
-
-    snake.coordinates.insert(0, (x, y))
-
-
-
-    square = canvas.create_rectangle(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=SNAKE_COLOR)
-
-
-
-    snake.squares.insert(0, square)
-
-
-
-    if x == food.coordinates[0] and y == food.coordinates[1]:
-
-
-
-        global score
-
-
-
-        score += 1
-
-
-
-        label.config(text="Score:{}".format(score))
-
-
-
-        canvas.delete("food")
-
-
-
-        food = Food()
-
-
-
-    else:
-
-
-
-        del snake.coordinates[-1]
-
-
-
-        canvas.delete(snake.squares[-1])
-
-
-
-        del snake.squares[-1]
-
-
-
-    if check_collisions(snake):
-
-        game_over()
-
-
-
-    else:
-
-        window.after(SPEED, next_turn, snake, food)
-
-
-
-
-
-def change_direction(new_direction):
-
-
-
-    global direction
-
-
-
-    if new_direction == 'left':
-
-        if direction != 'right':
-
-            direction = new_direction
-
-    elif new_direction == 'right':
-
-        if direction != 'left':
-
-            direction = new_direction
-
-    elif new_direction == 'up':
-
-        if direction != 'down':
-
-            direction = new_direction
-
-    elif new_direction == 'down':
-
-        if direction != 'up':
-
-            direction = new_direction
-
-
-
-
-
-def check_collisions(snake):
-
-
-
-    x, y = snake.coordinates[0]
-
-
-
-    if x < 0 or x >= GAME_WIDTH:
-
-        return True
-
-    elif y < 0 or y >= GAME_HEIGHT:
-
-        return True
-
-
-
-    for body_part in snake.coordinates[1:]:
-
-        if x == body_part[0] and y == body_part[1]:
-
-            return True
-
-
-
-    return False
-
-
-
-
-
+ 
+snake_speed = 15
+ 
+# Window size
+window_x = 720
+window_y = 480
+ 
+# defining colors
+black = pygame.Color(0, 0, 0)
+white = pygame.Color(255, 255, 255)
+red = pygame.Color(255, 0, 0)
+green = pygame.Color(0, 255, 0)
+blue = pygame.Color(0, 0, 255)
+ 
+# Initialising pygame
+pygame.init()
+ 
+# Initialise game window
+pygame.display.set_caption('GeeksforGeeks Snakes')
+game_window = pygame.display.set_mode((window_x, window_y))
+ 
+# FPS (frames per second) controller
+fps = pygame.time.Clock()
+ 
+# defining snake default position
+snake_position = [100, 50]
+ 
+# defining first 4 blocks of snake body
+snake_body = [[100, 50],
+              [90, 50],
+              [80, 50],
+              [70, 50]
+              ]
+
+def generate_fruit(): # this is the function that will generate the fruits on the maps. This fucntion is costom but the code is orignal
+    # fruit position
+    fruit_position = [random.randrange(1, (window_x//10)) * 10, 
+                    random.randrange(1, (window_y//10)) * 10]
+    
+    return fruit_position
+    
+
+ 
+
+ 
+# displaying Score function
+def show_score(choice, color, font, size, score):
+   
+    # creating font object score_font
+    score_font = pygame.font.SysFont(font, size)
+     
+    # create the display surface object 
+    # score_surface
+    score_surface = score_font.render('Score : ' + str(score), True, color)
+     
+    # create a rectangular object for the text
+    # surface object
+    score_rect = score_surface.get_rect()
+     
+    # displaying text
+    game_window.blit(score_surface, score_rect)
+ 
+# game over function
 def game_over():
+   
+    # creating font object my_font
+    my_font = pygame.font.SysFont('times new roman', 50)
+     
+    # creating a text surface on which text 
+    # will be drawn
+    game_over_surface = my_font.render(
+        'Your Score is : ' + str(score), True, red)
+     
+    # create a rectangular object for the text 
+    # surface object
+    game_over_rect = game_over_surface.get_rect()
+     
+    # setting position of the text
+    game_over_rect.midtop = (window_x/2, window_y/4)
+     
+    # blit will draw the text on screen
+    game_window.blit(game_over_surface, game_over_rect)
+    pygame.display.flip()
+     
+    # after 2 seconds we will quit the program
+    time.sleep(2)
+     
+    # deactivating pygame library
+    pygame.quit()
+     
+    # quit the program
+    quit()
+ 
+def snake_game(): # define the function that will be used and called in other files. This is costom code
 
+    # setting default snake direction towards
+    # right
+    direction = 'RIGHT'
+    change_to = direction
+    
+    # initial score
+    score = 0
 
+    fruit_position = generate_fruit() #  generate the location of the fruit. THIS IS CUSTOM CODE
 
-    canvas.delete(ALL)
+    fruit_spawn = True # set the fruit to respawn. THIS IS CUSTOM CODE
 
-    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2,
+    # Main Function
+    while True:
+        
+        # handling key events
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    change_to = 'UP'
+                if event.key == pygame.K_DOWN:
+                    change_to = 'DOWN'
+                if event.key == pygame.K_LEFT:
+                    change_to = 'LEFT'
+                if event.key == pygame.K_RIGHT:
+                    change_to = 'RIGHT'
+    
+        # If two keys pressed simultaneously
+        # we don't want snake to move into two 
+        # directions simultaneously
+        if change_to == 'UP' and direction != 'DOWN':
+            direction = 'UP'
+        if change_to == 'DOWN' and direction != 'UP':
+            direction = 'DOWN'
+        if change_to == 'LEFT' and direction != 'RIGHT':
+            direction = 'LEFT'
+        if change_to == 'RIGHT' and direction != 'LEFT':
+            direction = 'RIGHT'
+    
+        # Moving the snake
+        if direction == 'UP':
+            snake_position[1] -= 10
+        if direction == 'DOWN':
+            snake_position[1] += 10
+        if direction == 'LEFT':
+            snake_position[0] -= 10
+        if direction == 'RIGHT':
+            snake_position[0] += 10
+    
+        # Snake body growing mechanism
+        # if fruits and snakes collide then scores
+        # will be incremented by 10
+        snake_body.insert(0, list(snake_position))
+        if snake_position[0] == fruit_position[0] and snake_position[1] == fruit_position[1]:
+            score += 10
+            fruit_spawn = False
+        else:
+            snake_body.pop()
+            
+        if not fruit_spawn:
+            fruit_position = [random.randrange(1, (window_x//10)) * 10, 
+                            random.randrange(1, (window_y//10)) * 10]
+            
+        fruit_spawn = True
+        game_window.fill(black)
+        
+        for pos in snake_body:
+            pygame.draw.rect(game_window, green,
+                            pygame.Rect(pos[0], pos[1], 10, 10))
+        pygame.draw.rect(game_window, white, pygame.Rect(
+            fruit_position[0], fruit_position[1], 10, 10))
+    
+        # Game Over conditions
+        if snake_position[0] < 0 or snake_position[0] > window_x-10:
+            game_over()
+        if snake_position[1] < 0 or snake_position[1] > window_y-10:
+            game_over()
+    
+        # Touching the snake body
+        for block in snake_body[1:]:
+            if snake_position[0] == block[0] and snake_position[1] == block[1]:
+                game_over()
+    
+        # displaying score continuously
+        show_score(1, white, 'times new roman', 20, score)
+    
+        # Refresh game screen
+        pygame.display.update()
+    
+        # Frame Per Second /Refresh Rate
+        fps.tick(snake_speed)
 
-                       font=('consolas',70), text="GAME OVER", fill="red", tag="gameover")
-
-
-
-
-
-window = Tk()
-
-window.title("Snake game")
-
-window.resizable(False, False)
-
-
-
-score = 0
-
-direction = 'down'
-
-
-
-label = Label(window, text="Score:{}".format(score), font=('consolas', 40))
-
-label.pack()
-
-
-
-canvas = Canvas(window, bg=BACKGROUND_COLOR, height=GAME_HEIGHT, width=GAME_WIDTH)
-
-canvas.pack()
-
-
-
-window.update()
-
-
-
-window_width = window.winfo_width()
-
-window_height = window.winfo_height()
-
-screen_width = window.winfo_screenwidth()
-
-screen_height = window.winfo_screenheight()
-
-
-
-x = int((screen_width/2) - (window_width/2))
-
-y = int((screen_height/2) - (window_height/2))
-
-
-
-window.geometry(f"{window_width}x{window_height}+{x}+{y}")
-
-
-
-window.bind('<Left>', lambda event: change_direction('left'))
-
-window.bind('<Right>', lambda event: change_direction('right'))
-
-window.bind('<Up>', lambda event: change_direction('up'))
-
-window.bind('<Down>', lambda event: change_direction('down'))
-
-
-
-snake = Snake()
-
-food = Food()
-
-
-
-next_turn(snake, food)
-
-
-
-window.mainloop()
+snake_game()
