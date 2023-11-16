@@ -25,6 +25,7 @@ class Snake:
         self.segments = []
         self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}
         self.score = 0 # CUSTOM CODE. keep track of the score of the snake
+        self.game_done = False # CUSTOM CODE. if the game is done this will be true
         
     def control(self, event):
         if event.type == pg.KEYDOWN:
@@ -56,9 +57,9 @@ class Snake:
 
     def check_borders(self):
         if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
-            self.game.new_game()
+            self.game_done = self.game. ()
         if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
-            self.game.new_game()
+            self.game_done = self.game.game_over()
 
     def check_food(self):
         if self.rect.center == self.game.food.rect.center:
@@ -69,7 +70,7 @@ class Snake:
 
     def check_selfeating(self):
         if len(self.segments) != len(set(segment.center for segment in self.segments)):
-            self.game.new_game()
+            self.game_done = self.game.game_over()
 
     def move(self):
         if self.delta_time():
@@ -118,8 +119,13 @@ class Game:
                                              for y in range(0, self.WINDOW_SIZE, self.TILE_SIZE)]
 
     def new_game(self):
+        pg.init()
         self.snake = Snake(self)
         self.food = Food(self)
+    
+    def game_over(self): # CUTSOM CODE. if the game is over return the final score
+        self.snake.score -= 10 # decrement the code if the game endsq1``
+        return False, self.snake.score
 
     def update(self):
         self.snake.update()
@@ -141,11 +147,12 @@ class Game:
             self.snake.control(event)
 
     def run(self):
-        while True:
+        while not self.snake.game_done:
             self.check_event()
             self.update()
             self.draw()
-            print(self.snake.return_score())# CUSTOM CODE. return the score of the snake
+        pg.quit()
+        sys.exit()
     
 
 
