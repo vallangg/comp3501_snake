@@ -4,6 +4,16 @@
     All edits that have been made by this team are commented as such
 """
 
+####################
+# TODO add the preamble to this and make it better. 
+## I dont think that we need to do much commenting on the code that isn't ours
+# TODO figure out what is needed for the agent and find a way to implement it
+## I think this requires a better understanding of what exactly the agent needs and then doing some experimenting. obviosuly it would need the score for training purposes but
+# i don't know what else. 
+####################
+
+
+
 import pygame as pg
 import sys
 from random import randrange
