@@ -11,13 +11,24 @@
 import torch
 import torch.nn as nn # import the neural network package
 import torch.optim as optim # import the optimizer function
+import torch.nn.functional as F # import this helper function
 import numpy as np
 
 
 class linear_model(nn.Module):
+     """
+          This is the code to create the linear neural network model using pytorch.
+          This code is largely taken from the pytorch website. 
+          https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html
+     """
 
-     def __init__(self, num_inputs, num_hidden, num_outputs):
-          pass
+     def __init__(self, in_features: int, Hn: int, out_features: int):
+          super().__init__() # call the parent init fucntion
+          # TODO add the rest of the init of the model here
 
-     def init_model(self):
+     def forward(self, x): 
+          """
+               This function will act as a helper to pass information forward to the further layers
+               :param x: this is the data that will pass through the neural netword
+          """
           pass

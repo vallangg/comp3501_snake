@@ -9,7 +9,7 @@
 ## I dont think that we need to do much commenting on the code that isn't ours
 # TODO figure out what is needed for the agent and find a way to implement it
 ## I think this requires a better understanding of what exactly the agent needs and then doing some experimenting. obviosuly it would need the score for training purposes but
-# i don't know what else. 
+# i don't know what
 ####################
 
 
@@ -67,7 +67,7 @@ class Snake:
 
     def check_borders(self):
         if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
-            self.game_done = self.gameawas()
+            self.game_done = self.game.game_over()
         if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
             self.game_done = self.game.game_over()
 
@@ -116,7 +116,7 @@ class Game:
     def __init__(self):
         pg.init()
         self.WINDOW_SIZE = 1000
-        self.TILE_SIZE = 50
+        self.TILE_SIZE = 100
         self.screen = pg.display.set_mode([self.WINDOW_SIZE] * 2)
         self.clock = pg.time.Clock()
         self.new_game()
