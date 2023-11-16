@@ -57,7 +57,7 @@ class Snake:
 
     def check_borders(self):
         if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
-            self.game_done = self.game. ()
+            self.game_done = self.gameawas()
         if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
             self.game_done = self.game.game_over()
 
