@@ -76,7 +76,6 @@ class Snake:
             self.game.food.rect.center = self.get_random_position()
             self.length += 1
             self.score += 10 # CUSTOM CODE. if the snake eats the food add 10 points to the score
-            print(self.score)
 
     def check_selfeating(self):
         if len(self.segments) != len(set(segment.center for segment in self.segments)):
@@ -134,7 +133,9 @@ class Game:
         self.food = Food(self)
     
     def game_over(self): # CUTSOM CODE. if the game is over return the final score
-        self.snake.score -= 10 # decrement the code if the game endsq1``
+        self.snake.score -= 10 # decrement the code if the game ends
+        print(self.snake.score)
+        print(self.snake.segments)
         return False, self.snake.score
 
     def update(self):
