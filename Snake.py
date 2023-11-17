@@ -55,6 +55,23 @@ class Snake:
                 self.direction = vec2(self.size, 0)
                 self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
+    def nueral_control(self, neural_direction):
+            if neural_direction == 1:
+                self.direction = vec2(0, -self.size)
+                self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
+
+            if neural_direction == 2:
+                self.direction = vec2(0, self.size)
+                self.directions = {pg.K_w: 0, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}
+
+            if neural_direction == 3:
+                self.direction = vec2(-self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 0}
+
+            if neural_direction == 4:
+                self.direction = vec2(self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
+
     def delta_time(self):
         time_now = pg.time.get_ticks()
         if time_now - self.time > self.step_delay:
@@ -131,8 +148,6 @@ class Game:
         pg.init()
         self.snake = Snake(self)
         self.food = Food(self)
-
-        print(self.snake, self.food, self.snake.segments)
     
     def game_over(self): # CUTSOM CODE. if the game is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
@@ -167,10 +182,11 @@ class Game:
         pg.quit()
         sys.exit()
 
-    def single_step(self):  #To train network, we need to do one step at a time.
+    def single_step(self, thing_to_do):  #To train network, we need to do one step at a time.
         if self.snake.game_done:
             return False
         else:
+            self.nueral_control(thing_to_do)
             self.check_event()
             self.update()
             self.draw()
@@ -178,15 +194,21 @@ class Game:
    
     
     def get_state(self):  #Get currrent position of snake and apple
-        output = []
+        output = [[],[]]
         for s in self.snake.segments:
-            output.append(s.center)
-        output.append(self.food.rect.center)
+            output[0].append(s.center[0])
+            output[1].append(s.center[1])
+
+        output[0].append(self.food.rect.center[0])
+        output[1].append(self.food.rect.center[1])
+
+        for i in range(len(output[0]), 100):
+            output[0].append(0)
+            output[1].append(0)
         return output
 
 
 
-game = Game()
-s = game.get_state()
-print(s)
-game.run()
+# game = Game()
+
+# game.run()

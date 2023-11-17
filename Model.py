@@ -13,6 +13,7 @@ import torch.nn as nn # import the neural network package
 import torch.optim as optim # import the optimizer function
 import torch.nn.functional as F # import this helper function
 import numpy as np
+from Snake import Game
 
 device = (
     "cuda"
@@ -36,11 +37,11 @@ class Brain(nn.Module):
           # TODO add the rest of the init of the model here
           self.flatten = nn.Flatten()
           self.linear_relu_stack = nn.Sequential(
-               nn.Linear(28*28, 512),
+               nn.Linear(10*10, 4),
                nn.ReLU(),
-               nn.Linear(512, 512),
+               nn.Linear(4, 4),
                nn.ReLU(),
-               nn.Linear(512, 10),
+               nn.Linear(4, 4),
           )
 
      def forward(self, x): 
@@ -56,11 +57,15 @@ class Brain(nn.Module):
 
 
 b = Brain()
-model = Brain().to(device)
-print(model)
 
-X = torch.rand(1, 28, 28, device=device)
-logits = model(X)
+game = Game()
+stat = game.get_state()
+ten_stat = torch.tensor(stat, device=device).float()
+# print(ten_stat)
+# X = torch.rand(1, 28, 28, device=device)
+logits = b(ten_stat)
+print("Logits: ",logits)
+
 pred_probab = nn.Softmax(dim=1)(logits)
 y_pred = pred_probab.argmax(1)
 print(f"Predicted class: {y_pred}")
@@ -69,3 +74,4 @@ print(f"Predicted class: {y_pred}")
 # tensor = torch.tensor(data)
 # t = b.forward(tensor)
 # print(t)
+# untimeError: mat1 and mat2 must have the same dtype, but got Long and Float
