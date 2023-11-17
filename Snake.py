@@ -114,8 +114,8 @@ class Food:
 class Game:
     def __init__(self):
         pg.init()
-        self.WINDOW_SIZE = 1000
-        self.TILE_SIZE = 100
+        self.WINDOW_SIZE = 500
+        self.TILE_SIZE = 50
         self.screen = pg.display.set_mode([self.WINDOW_SIZE] * 2)
         self.clock = pg.time.Clock()
         self.new_game()
@@ -131,6 +131,8 @@ class Game:
         pg.init()
         self.snake = Snake(self)
         self.food = Food(self)
+
+        print(self.snake, self.food, self.snake.segments)
     
     def game_over(self): # CUTSOM CODE. if the game is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
@@ -164,9 +166,27 @@ class Game:
             self.draw()
         pg.quit()
         sys.exit()
+
+    def single_step(self):  #To train network, we need to do one step at a time.
+        if self.snake.game_done:
+            return False
+        else:
+            self.check_event()
+            self.update()
+            self.draw()
+            return True
+   
     
+    def get_state(self):  #Get currrent position of snake and apple
+        output = []
+        for s in self.snake.segments:
+            output.append(s.center)
+        output.append(self.food.rect.center)
+        return output
 
 
 
 game = Game()
+s = game.get_state()
+print(s)
 game.run()
