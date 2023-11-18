@@ -196,7 +196,7 @@ class Game:
 
         return_list[int(((self.food.rect.center[1]-1)/50))][int(((self.food.rect.center[0]-1)/50))] = 2 # whereever there is food on the board place 2
         
-
+        return return_list # retrun the list that was made
 
 
         
