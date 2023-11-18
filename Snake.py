@@ -55,6 +55,23 @@ class Snake:
                 self.direction = vec2(self.size, 0)
                 self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
+    def nueral_control(self, neural_direction):
+            if neural_direction == 1:
+                self.direction = vec2(0, -self.size)
+                self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
+
+            if neural_direction == 2:
+                self.direction = vec2(0, self.size)
+                self.directions = {pg.K_w: 0, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}
+
+            if neural_direction == 3:
+                self.direction = vec2(-self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 0}
+
+            if neural_direction == 4:
+                self.direction = vec2(self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
+
     def delta_time(self):
         time_now = pg.time.get_ticks()
         if time_now - self.time > self.step_delay:
@@ -114,8 +131,8 @@ class Food:
 class Game:
     def __init__(self):
         pg.init()
-        self.WINDOW_SIZE = 1000
-        self.TILE_SIZE = 100
+        self.WINDOW_SIZE = 500
+        self.TILE_SIZE = 50
         self.screen = pg.display.set_mode([self.WINDOW_SIZE] * 2)
         self.clock = pg.time.Clock()
         self.new_game()
@@ -163,15 +180,6 @@ class Game:
             self.draw()
         pg.quit()
         sys.exit()
-    
-    def get_state(self)->list:
-        """
-            This function will return a list of the game board. It will contain a zero for nothing, a 1 for a snake, a 2 for the head of the snake
-            and a 3 for food. The reason that the head of the snake is given a different number than the body is so the NN knows where to go from. 
-            :param None:
-            :return List: The list that will represent the game board
-        """
-
     
 
 
