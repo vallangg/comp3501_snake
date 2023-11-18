@@ -55,7 +55,11 @@ class Snake:
                 self.direction = vec2(self.size, 0)
                 self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
-    def nueral_control(self, neural_direction):
+    def neural_control(self, neural_direction):
+            """
+                This is the function that will take the input from the neural network and control the snake
+                :param neural_direction:
+            """
             if neural_direction == 1:
                 self.direction = vec2(0, -self.size)
                 self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
@@ -137,7 +141,6 @@ class Game:
         self.clock = pg.time.Clock()
         self.new_game()
 
-
     def draw_grid(self):
         [pg.draw.line(self.screen, [50] * 3, (x, 0), (x, self.WINDOW_SIZE))
                                              for x in range(0, self.WINDOW_SIZE, self.TILE_SIZE)]
@@ -178,9 +181,30 @@ class Game:
             self.check_event()
             self.update()
             self.draw()
+            self.get_state()
         pg.quit()
         sys.exit()
     
+    def get_state(self)->list:
+        """
+            This code will return a list to represent the board
+            0=nothing, 1=snake, 2=food
+            :param None:
+            :return list: the list that represents the game board
+        """
+
+        return_list = [[0] * 10] * 10 # create the list and make its default state all zeroes
+
+        for segment in self.snake.segments:
+            return_list[int(((segment[1]-1)/50))][int(((segment[0]-1)/50))] = 1 # whereever there is a snake segemtne on the board place a 1
+
+        return_list[int(((self.food.rect.center[1]-1)/50))][int(((self.food.rect.center[0]-1)/50))] = 2 # whereever there is food on the board place 2
+        
+        print(return_list)
+
+
+
+        
 
 
 
