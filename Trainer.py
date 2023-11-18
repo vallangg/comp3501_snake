@@ -31,5 +31,14 @@ class trainer:
                score = T.unsqueeze(score, 0) 
                game_over = (game_over, ) # put the bool into a tuple
           
-          pred = self.model(state)
+          pred = self.model(state) # generate the predicted Q values from the state
+
+          target = pred.clone() 
+          for ii_pred in range(len(game_over)):
+               Q_new = score[ii_pred]
+               if not game_over:
+                    Q_new = score[ii_pred] + self.gamma * T.max(self.model(next_state[ii_pred])) # compute the Q value
+               
+               target[ii_pred][T.argmax(action).item()] = Q_new # update the Q table using the new value of Q that was just caluclated
+
 
