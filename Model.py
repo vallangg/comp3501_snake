@@ -37,11 +37,11 @@ class Brain(nn.Module):
           # TODO add the rest of the init of the model here
           self.flatten = nn.Flatten()
           self.linear_relu_stack = nn.Sequential(
-               nn.Linear(10*10, 4),
+               nn.Linear(10*10, 4),   # 10X10 grid with 4 hidden layers
                nn.ReLU(),
-               nn.Linear(4, 4),
+               nn.Linear(4, 4),   #Hidden layers
                nn.ReLU(),
-               nn.Linear(4, 4),
+               nn.Linear(4, 4),  #Hidden Layers and 4 directions to move in
           )
 
      def forward(self, x): 

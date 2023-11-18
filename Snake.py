@@ -55,11 +55,7 @@ class Snake:
                 self.direction = vec2(self.size, 0)
                 self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
-    def neural_control(self, neural_direction):
-            """
-                This is the function that will take the input from the neural network and control the snake
-                :param neural_direction:
-            """
+    def nueral_control(self, neural_direction):
             if neural_direction == 1:
                 self.direction = vec2(0, -self.size)
                 self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
