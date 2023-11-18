@@ -3,8 +3,3 @@
 ## this is a later problem
 ####################
 
-#hello world
-
-#Bib
-
-#a;sldkjfpasdkfhj;alskdfj

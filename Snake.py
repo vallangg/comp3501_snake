@@ -135,7 +135,6 @@ class Game:
     def game_over(self): # CUTSOM CODE. if the game is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
         print(self.snake.score)
-        print(self.snake.segments)
         return False, self.snake.score
 
     def update(self):
@@ -164,6 +163,15 @@ class Game:
             self.draw()
         pg.quit()
         sys.exit()
+    
+    def get_state(self)->list:
+        """
+            This function will return a list of the game board. It will contain a zero for nothing, a 1 for a snake, a 2 for the head of the snake
+            and a 3 for food. The reason that the head of the snake is given a different number than the body is so the NN knows where to go from. 
+            :param None:
+            :return List: The list that will represent the game board
+        """
+
     
 
 
