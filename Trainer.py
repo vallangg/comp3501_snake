@@ -36,21 +36,23 @@ class trainer:
                action = T.unsqueeze(action, 0)
                next_state = T.unsqueeze(next_state, 0) 
                score = T.unsqueeze(score, 0) 
-          game_over = (game_over, ) # put the bool into a tuple with only itself
+               game_over = (game_over, ) # put the bool into a tuple with only itself
           
           pred = self.model(state) # generate the predicted Q values from the state
 
           target = pred.clone() 
+
           for ii_pred in range(len(game_over)):
-               Q_new = score[ii_pred].item()
-               if not game_over:
+               # print("Trainer in Trainer.py. target: ", target[ii_pred])
+               Q_new = score[ii_pred]
+               if not game_over[ii_pred]:
                     Q_new = score[ii_pred] + self.gamma * T.max(self.model(next_state[ii_pred])) # compute the Q value
                
                target[ii_pred][T.argmax(action).item()] = Q_new # update the Q table using the new value of Q that was just caluclated
           
           self.optimizer.zero_grad() # empty the gradient 
           loss = self.loss_function(target, pred) # comapre the new Q and old one
-          loss.backward()
+          loss.backward() 
           
           self.optimizer.step()
 

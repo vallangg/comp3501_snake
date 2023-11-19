@@ -63,11 +63,12 @@ class Agent:
                This is function that will tell the game what to do based on the current state of the game.
                :param State: this is the state of the game that will be used to feed into the model
           """
-          final_move = 0 # this is what the snake will do 
+          final_move_set = [1, 2, 3, 4] # this is what the snake will do 
           if np.random.random() > self.epsilon: # if the random value is greater than the episolon than the model can act. EXPLOITATION
                state = T.tensor(current_state, dtype=T.float) # change the state into a tensor for the NN to use
                actions = self.model(state) # store the actions that the NN gives back
-               final_move = T.argmax(actions).item() # take the value that is the highest from the NN
+               choice = T.argmax(actions).item() # take the value that is the highest from the NN
+               final_move = final_move_set[choice]
           else:
                final_move = random.randint(1, 4) # chose a random direction do move
                self.epsilon -= 1/(self.num_games+1) # if we choose a random move, decrement the epsilon value
@@ -93,7 +94,6 @@ def Train(gamma:float=0.9, epsilon:float=0.05, learning_rate:float = 0.5):
      
      # define all the nodes that you need
      agent = Agent(gamma, epsilon, learning_rate)
-     model = Brain()
      game = Game()
 
      while True: # loop over this as long as you want to train
@@ -108,6 +108,8 @@ def Train(gamma:float=0.9, epsilon:float=0.05, learning_rate:float = 0.5):
           # print(f"Train in Agent.py. state0: {state0}")
 
           agent.cache(state0, move0, state1, score, game_over) # store the data into the memory
+
+          agent.train_short(state0, move0, state1, score, game_over)
 
           if game_over: # if the game is over
                game.new_game() # start a new game

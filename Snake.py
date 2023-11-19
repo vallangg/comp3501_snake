@@ -185,6 +185,8 @@ class Game:
         self.clock.tick(60)
         self.draw()
 
+        print(f"direction chosen: {neural_direction}")
+
         game_over, score = self.snake.game_done, self.snake.score
         return game_over, score
 
@@ -212,7 +214,7 @@ class Game:
         for segment in self.snake.segments:
             x_index = int(segment.x / self.TILE_SIZE)
             y_index = int(segment.y / self.TILE_SIZE)
-            print(f"Segment position: ({segment.x}, {segment.y}), Grid index: ({x_index}, {y_index})")
+            # print(f"Segment position: ({segment.x}, {segment.y}), Grid index: ({x_index}, {y_index})")
             if 0 <= x_index < grid_size and 0 <= y_index < grid_size:
                 return_list[y_index][x_index] = 1  # Place a 1 where there is a snake segment
 
@@ -222,7 +224,7 @@ class Game:
             return_list[food_y_index][food_x_index] = 2  # Place a 2 where there is food
         
 
-        print(f"return_state in Snake.py. state: {return_list}")
+        # print(f"return_state in Snake.py. state: {return_list}")
 
         return_list = np.array(return_list).flatten()  # Flatten the 2D list into a 1D numpy array
         return return_list
