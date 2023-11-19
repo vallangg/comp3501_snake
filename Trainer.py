@@ -48,7 +48,8 @@ class trainer:
                if not game_over[ii_pred]:
                     Q_new = score[ii_pred] + self.gamma * T.max(self.model(next_state[ii_pred])) # compute the Q value
                
-               target[ii_pred][T.argmax(action).item()] = Q_new # update the Q table using the new value of Q that was just caluclated
+               # print(f" ii_pred: {ii_pred} \t  argmax {T.argmax(action).item()%4}")
+               target[ii_pred][T.argmax(action).item()%4] = Q_new # update the Q table using the new value of Q that was just caluclated
           
           self.optimizer.zero_grad() # empty the gradient 
           loss = self.loss_function(target, pred) # comapre the new Q and old one

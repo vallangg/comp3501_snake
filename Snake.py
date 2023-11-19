@@ -93,7 +93,8 @@ class Snake:
         if self.rect.center == self.game.food.rect.center:
             self.game.food.rect.center = self.get_random_position()
             self.length += 1
-            self.score += 10 # CUSTOM CODE. if the snake eats the food add 10 points to the score
+            self.score += 20 # CUSTOM CODE. if the snake eats the food add 10 points to the score
+            print("FOOD WAS EATEN")
 
     def check_selfeating(self):
         if len(self.segments) != len(set(segment.center for segment in self.segments)):
@@ -145,14 +146,16 @@ class Game:
                                              for y in range(0, self.WINDOW_SIZE, self.TILE_SIZE)]
 
     def new_game(self):
+        print("GAME ENDED")
         pg.init()
         self.snake = Snake(self)
         self.food = Food(self)
+        # self.snake.game_done = False
     
     def game_over(self): # CUTSOM CODE. if the game is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
         print(self.snake.score)
-        return False
+        return True
 
     def update(self):
         self.snake.update()
@@ -180,7 +183,8 @@ class Game:
             This code will run a single step in the game of snake based on the Neural Networks input
         """
         self.snake.nueral_control(neural_direction)
-        self.snake.update()
+        self.update()
+        self.check_event()
         pg.display.flip()
         self.clock.tick(60)
         self.draw()
@@ -191,7 +195,7 @@ class Game:
         return game_over, score
 
     def run(self):
-        if not self.snake.game_done:
+        while not self.snake.game_done:
             self.check_event()
             self.update()
             self.draw()
