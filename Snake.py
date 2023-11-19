@@ -201,25 +201,33 @@ class Game:
             This code will return a list to represent the board
             0=nothing, 1=snake, 2=food
             :param None:
-            :return list: the list that represents the game board
+            :return list: the array that represents the game board
         """
 
-        return_list = [[0] * 10] * 10 # create the list and make its default state all zeroes
+        grid_size = 10  # for a 10 square grid
+        return_list = [[0 for ii in range(grid_size)] for jj in range(grid_size)]  # Corrected list initialization
+
+        # print(self.snake.segments)
 
         for segment in self.snake.segments:
-            if int(((segment[1]-1)/50)) > 0 and int(((segment[1]-1)/50)) < 9 and int(((segment[0]-1)/50)) > 0 and int(((segment[0]-1)/50)) < 9:
-                return_list[int(((segment[1]-1)/50))][int(((segment[0]-1)/50))] = 1 # whereever there is a snake segemtne on the board place a 1
+            x_index = int(segment.x / self.TILE_SIZE)
+            y_index = int(segment.y / self.TILE_SIZE)
+            print(f"Segment position: ({segment.x}, {segment.y}), Grid index: ({x_index}, {y_index})")
+            if 0 <= x_index < grid_size and 0 <= y_index < grid_size:
+                return_list[y_index][x_index] = 1  # Place a 1 where there is a snake segment
 
-        return_list[int(((self.food.rect.center[1]-1)/50))][int(((self.food.rect.center[0]-1)/50))] = 2 # whereever there is food on the board place 2
+        food_x_index = int(self.food.rect.centerx / self.TILE_SIZE)
+        food_y_index = int(self.food.rect.centery / self.TILE_SIZE)
+        if 0 <= food_x_index < grid_size and 0 <= food_y_index < grid_size:
+            return_list[food_y_index][food_x_index] = 2  # Place a 2 where there is food
+
+        return_list = np.array(return_list).flatten()  # Flatten the 2D list into a 1D numpy array
+        return return_list
+
+
         
-        return_list = np.array(return_list).flatten()
-        print(f"return_state in Snake.py. state: {return_list} ")
-        return  return_list# retrun the list that was made
-
-
-        
 
 
 
-# game = Game()
-# game.run()
+game = Game()
+game.run()

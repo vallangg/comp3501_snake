@@ -54,7 +54,7 @@ class Agent:
                :param score: the score of the game after the action is taken
                :param game_over: is the game over (bool)
           """
-          print(f"cache in Agent.py: state: {state}")
+          # print(f"cache in Agent.py: state: {state}")
           self.memory.append((state, action, next_state, score, game_over))
 
 
@@ -82,7 +82,7 @@ class Agent:
                sample = self.memory # if the length is less than 1,00 just  pull all of the memory
 
           state, action, next_state, score, game_over = zip(*sample) # agregate the data
-          print(f"train_long in Agent.py. state: {state}")
+          # print(f"train_long in Agent.py. state: {state}")
           self.trainer.train_step(state, action, next_state, score, game_over) # train on the data
 
      def train_short(self, state, action, next_state, score, game_over):
@@ -105,7 +105,7 @@ def Train(gamma:float=0.9, epsilon:float=0.05, learning_rate:float = 0.5):
           
           score, game_over = game.step(move0) # run a single step of the snake game and pull the score, game_over, and new state of the step
           state1 = game.return_state()
-          print(f"Train in Agent.py. state0: {state0}")
+          # print(f"Train in Agent.py. state0: {state0}")
 
           agent.cache(state0, move0, state1, score, game_over) # store the data into the memory
 
