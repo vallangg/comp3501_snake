@@ -220,6 +220,9 @@ class Game:
         food_y_index = int(self.food.rect.centery / self.TILE_SIZE)
         if 0 <= food_x_index < grid_size and 0 <= food_y_index < grid_size:
             return_list[food_y_index][food_x_index] = 2  # Place a 2 where there is food
+        
+
+        print(f"return_state in Snake.py. state: {return_list}")
 
         return_list = np.array(return_list).flatten()  # Flatten the 2D list into a 1D numpy array
         return return_list

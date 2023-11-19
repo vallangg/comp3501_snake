@@ -25,7 +25,7 @@ class trainer:
           self.loss_function = nn.MSELoss() # define the loss fucntion
  
      def train_step(self, state, action, next_state, score, game_over):
-          print(f"State in Trainer: {state}")
+          # print(f"State in Trainer: {state}")
           state = T.tensor(state, dtype=T.float)
           action = T.tensor(action, dtype=T.float)
           next_state = T.tensor(next_state, dtype=T.float)
