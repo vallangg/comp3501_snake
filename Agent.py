@@ -54,6 +54,7 @@ class Agent:
                :param score: the score of the game after the action is taken
                :param game_over: is the game over (bool)
           """
+          print(f"cache in Agent.py: state: {state}")
           self.memory.append((state, action, next_state, score, game_over))
 
 
@@ -81,7 +82,7 @@ class Agent:
                sample = self.memory # if the length is less than 1,00 just  pull all of the memory
 
           state, action, next_state, score, game_over = zip(*sample) # agregate the data
-
+          print(f"train_long in Agent.py. state: {state}")
           self.trainer.train_step(state, action, next_state, score, game_over) # train on the data
 
      def train_short(self, state, action, next_state, score, game_over):
@@ -97,13 +98,14 @@ def Train(gamma:float=0.9, epsilon:float=0.05, learning_rate:float = 0.5):
 
      while True: # loop over this as long as you want to train
           state0 = agent.get_state() # get the state of the agent
-          print(f"Original state shape: {len(state0)}, {len(state0[0])} (should be 10x10)")
-          state0 = T.tensor(state0).float().view(-1)  # Reshape to a flat tensor of size 100
-          print(f"Converted state tensor: {state0.shape} (should be [100])")
+          # print(f"Original state shape: {len(state0)}, {len(state0)} (should be 10x10)")
+          # print(f"Converted state tensor: {state0.shape} (should be [100])")
 
           move0 = agent.act(state0) # get the action that the agent will take
           
-          score, game_over, state1 = game.step(move0) # run a single step of the snake game and pull the score, game_over, and new state of the step
+          score, game_over = game.step(move0) # run a single step of the snake game and pull the score, game_over, and new state of the step
+          state1 = game.return_state()
+          print(f"Train in Agent.py. state0: {state0}")
 
           agent.cache(state0, move0, state1, score, game_over) # store the data into the memory
 

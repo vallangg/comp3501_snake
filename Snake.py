@@ -17,6 +17,7 @@
 import pygame as pg
 import sys
 from random import randrange
+import numpy as np
 
 vec2 = pg.math.Vector2
 
@@ -151,7 +152,7 @@ class Game:
     def game_over(self): # CUTSOM CODE. if the game is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
         print(self.snake.score)
-        return False, self.snake.score
+        return False
 
     def update(self):
         self.snake.update()
@@ -185,7 +186,7 @@ class Game:
         self.draw()
 
         game_over, score = self.snake.game_done, self.snake.score
-        return game_over, score, self.return_state()
+        return game_over, score
 
     def run(self):
         if not self.snake.game_done:
@@ -211,7 +212,9 @@ class Game:
 
         return_list[int(((self.food.rect.center[1]-1)/50))][int(((self.food.rect.center[0]-1)/50))] = 2 # whereever there is food on the board place 2
         
-        return return_list # retrun the list that was made
+        return_list = np.array(return_list).flatten()
+        print(f"return_state in Snake.py. state: {return_list} ")
+        return  return_list# retrun the list that was made
 
 
         

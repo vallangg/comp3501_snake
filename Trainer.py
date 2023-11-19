@@ -25,10 +25,11 @@ class trainer:
           self.loss_function = nn.MSELoss() # define the loss fucntion
  
      def train_step(self, state, action, next_state, score, game_over):
-          state = T.tensor(state)
-          action = T.tensor(action)
-          next_state = T.tensor(next_state)
-          score = T.tensor(score)
+          print(f"State in Trainer: {state}")
+          state = T.tensor(state, dtype=T.float)
+          action = T.tensor(action, dtype=T.float)
+          next_state = T.tensor(next_state, dtype=T.float)
+          score = T.tensor(score, dtype=T.float)
 
           if len(state.shape) == 1: # if there is only one value in the tensor
                state = T.unsqueeze(state, 0) # this appends one dimension to the tensor shape
