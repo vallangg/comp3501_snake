@@ -177,11 +177,10 @@ class Game:
             self.check_event()
             self.update()
             self.draw()
-            self.get_state()
         pg.quit()
         sys.exit()
     
-    def get_state(self)->list:
+    def return_state(self)->list:
         """
             This code will return a list to represent the board
             0=nothing, 1=snake, 2=food

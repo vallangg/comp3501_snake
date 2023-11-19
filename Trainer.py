@@ -10,6 +10,12 @@ import numpy as np
 from Snake import Game
 
 class trainer:
+     """
+     This does the training and running of the game
+     The code for this is based on several different sources:
+     https://pytorch.org/tutorials/intermediate/mario_rl_tutorial.html
+     https://www.youtube.com/watch?v=L8ypSXwyBds&t=4355s
+     """
 
      def __init__(self, model, learning_rate, gamma):
           self.lr = learning_rate
@@ -29,7 +35,7 @@ class trainer:
                action = T.unsqueeze(action, 0)
                next_state = T.unsqueeze(next_state, 0) 
                score = T.unsqueeze(score, 0) 
-               game_over = (game_over, ) # put the bool into a tuple
+               game_over = (game_over, ) # put the bool into a tuple with only itself
           
           pred = self.model(state) # generate the predicted Q values from the state
 
@@ -40,5 +46,10 @@ class trainer:
                     Q_new = score[ii_pred] + self.gamma * T.max(self.model(next_state[ii_pred])) # compute the Q value
                
                target[ii_pred][T.argmax(action).item()] = Q_new # update the Q table using the new value of Q that was just caluclated
-
+          
+          self.optimizer.zero_grad() # empty the gradient 
+          loss = self.loss_function(target, pred) # comapre the new Q and old one
+          loss.backward()
+          
+          self.optimizer.step()
 

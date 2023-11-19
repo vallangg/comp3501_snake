@@ -35,6 +35,7 @@ class Agent:
           self.memory = deque(maxlen=100000) # create the memory of the model with a maximum length of 100,000 so it does not get too big
           self.model =  Brain()
           self.trainer = trainer(self.model, self.learning_rate, self.gamma)
+          self.game = Game()
 
      def get_state(self):
           """
@@ -42,7 +43,7 @@ class Agent:
                :param None:
                :return State: What do we want this to be? the entire image? just the location of the snake and the location of the food?
           """
-          return Game.get_state()
+          return self.game.return_state()
 
      def cache(self, state, action, next_state, score, game_over):
           """
@@ -53,7 +54,7 @@ class Agent:
                :param score: the score of the game after the action is taken
                :param game_over: is the game over (bool)
           """
-          self.memory.append(state, action, next_state, score, game_over) 
+          self.memory.append((state, action, next_state, score, game_over))
 
 
      def act(self, current_state):
@@ -61,15 +62,13 @@ class Agent:
                This is function that will tell the game what to do based on the current state of the game.
                :param State: this is the state of the game that will be used to feed into the model
           """
-          final_move = [0,0,0,0] # this is what the snake will do 
+          final_move = 0 # this is what the snake will do 
           if np.random.random() > self.epsilon: # if the random value is greater than the episolon than the model can act. EXPLOITATION
                state = T.tensor(current_state, dtype=T.float) # change the state into a tensor for the NN to use
                actions = self.model(state) # store the actions that the NN gives back
-               action = T.argmax(actions).item() # take the value that is the highest from the NN
-               final_move[action] = 1
+               final_move = T.argmax(actions).item() # take the value that is the highest from the NN
           else:
-               action = np.random.choice(self.action) # choose a random action from the action space. EXPLORATION
-               final_move[action] = 1
+               final_move = random.randint(1, 4) # chose a random direction do move
                self.epsilon -= 1/self.num_games # if we choose a random move, decrement the epsilon value
           
           return final_move # return the action 
@@ -89,22 +88,18 @@ class Agent:
           pass
 
      
-def Trainer():
-     """
-          This does the training and running of the game
-          The code for this is based on several different sources:
-          https://pytorch.org/tutorials/intermediate/mario_rl_tutorial.html
-          https://www.youtube.com/watch?v=L8ypSXwyBds&t=4355s
-     """
+def Train(gamma:float=0.9, epsilon:float=0.05, learning_rate:float = 0.5):
+     
+     # define all the nodes that you need
+     agent = Agent(gamma, epsilon, learning_rate)
+     model = Brain()
+     game = Game()
 
-     game = Game() # bring in the snake game
-     agent = Agent() # create the agent
+     while True: # loop over this as long as you want to train
+          state0 = agent.get_state() # get the state of the agent
 
-     running_scores = [] # create a list that will contain all of the scores the model acheives
-     highest_score = 0 # store the highest score the model has acheived
-
+          move0 = agent.act(state0) # get the action that the agent will take
+          print(f"hello:{move0}")
 
 
-
-
-
+Train()

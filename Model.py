@@ -61,7 +61,7 @@ class Brain(nn.Module):
 b = Brain()
 
 game = Game()
-stat = game.get_state()
+stat = game.return_state()
 ten_stat = torch.tensor(stat, device=device).float()
 ten_stat = ten_stat.view(-1, 100) 
 # print(ten_stat)
