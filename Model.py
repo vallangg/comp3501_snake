@@ -50,7 +50,7 @@ class Brain(nn.Module):
                :param x: this is the data that will pass through the neural netword
           """
           # print(f"Original x shape: {x.shape}")  # Debugging: Check the original shape of x
-          x = self.flatten(x)
+          # x = self.flatten(x)
           # print(f"Flattened x shape: {x.shape}")  # Debugging: Check the shape after flattening
           logits = self.linear_relu_stack(x)
           return logits

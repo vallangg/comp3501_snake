@@ -23,7 +23,7 @@ class trainer:
           self.model = model
           self.optimizer = optim.Adam(self.model.parameters(), self.lr)# this is the optimizer function
           self.loss_function = nn.MSELoss() # define the loss fucntion
-
+ 
      def train_step(self, state, action, next_state, score, game_over):
           state = T.tensor(state)
           action = T.tensor(action)
@@ -35,13 +35,13 @@ class trainer:
                action = T.unsqueeze(action, 0)
                next_state = T.unsqueeze(next_state, 0) 
                score = T.unsqueeze(score, 0) 
-               game_over = (game_over, ) # put the bool into a tuple with only itself
+          game_over = (game_over, ) # put the bool into a tuple with only itself
           
           pred = self.model(state) # generate the predicted Q values from the state
 
           target = pred.clone() 
           for ii_pred in range(len(game_over)):
-               Q_new = score[ii_pred]
+               Q_new = score[ii_pred].item()
                if not game_over:
                     Q_new = score[ii_pred] + self.gamma * T.max(self.model(next_state[ii_pred])) # compute the Q value
                

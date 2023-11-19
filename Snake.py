@@ -171,16 +171,29 @@ class Game:
                 sys.exit()
             # snake control
             self.snake.control(event)
+        
+
+    def step(self, neural_direction):
+        """
+            CUSTOM CODE
+            This code will run a single step in the game of snake based on the Neural Networks input
+        """
+        self.snake.nueral_control(neural_direction)
+        self.snake.update()
+        pg.display.flip()
+        self.clock.tick(60)
+        self.draw()
+
+        game_over, score = self.snake.game_done, self.snake.score
+        return game_over, score, self.return_state()
 
     def run(self):
         if not self.snake.game_done:
             self.check_event()
             self.update()
             self.draw()
-            return self.score, True
         else:
             self.new_game()
-            return self.score, False
     
     def return_state(self)->list:
         """
@@ -193,7 +206,8 @@ class Game:
         return_list = [[0] * 10] * 10 # create the list and make its default state all zeroes
 
         for segment in self.snake.segments:
-            return_list[int(((segment[1]-1)/50))][int(((segment[0]-1)/50))] = 1 # whereever there is a snake segemtne on the board place a 1
+            if int(((segment[1]-1)/50)) > 0 and int(((segment[1]-1)/50)) < 9 and int(((segment[0]-1)/50)) > 0 and int(((segment[0]-1)/50)) < 9:
+                return_list[int(((segment[1]-1)/50))][int(((segment[0]-1)/50))] = 1 # whereever there is a snake segemtne on the board place a 1
 
         return_list[int(((self.food.rect.center[1]-1)/50))][int(((self.food.rect.center[0]-1)/50))] = 2 # whereever there is food on the board place 2
         
