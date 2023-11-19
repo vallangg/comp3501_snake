@@ -69,7 +69,7 @@ class Agent:
                final_move = T.argmax(actions).item() # take the value that is the highest from the NN
           else:
                final_move = random.randint(1, 4) # chose a random direction do move
-               self.epsilon -= 1/self.num_games # if we choose a random move, decrement the epsilon value
+               self.epsilon -= 1/(self.num_games+1) # if we choose a random move, decrement the epsilon value
           
           return final_move # return the action 
 
@@ -97,9 +97,11 @@ def Train(gamma:float=0.9, epsilon:float=0.05, learning_rate:float = 0.5):
 
      while True: # loop over this as long as you want to train
           state0 = agent.get_state() # get the state of the agent
+          state0 = T.tensor(state0).float().view(1, -1)  # Reshape to [1, 100]
 
           move0 = agent.act(state0) # get the action that the agent will take
-          print(f"hello:{move0}")
+          
+          score, game_over = game.run()
 
 
 Train()

@@ -49,8 +49,9 @@ class Brain(nn.Module):
                This function will act as a helper to pass information forward to the further layers
                :param x: this is the data that will pass through the neural netword
           """
+          # print(f"Original x shape: {x.shape}")  # Debugging: Check the original shape of x
           x = self.flatten(x)
-          print(x)
+          # print(f"Flattened x shape: {x.shape}")  # Debugging: Check the shape after flattening
           logits = self.linear_relu_stack(x)
           return logits
 

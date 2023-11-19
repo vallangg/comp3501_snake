@@ -173,12 +173,14 @@ class Game:
             self.snake.control(event)
 
     def run(self):
-        while not self.snake.game_done:
+        if not self.snake.game_done:
             self.check_event()
             self.update()
             self.draw()
-        pg.quit()
-        sys.exit()
+            return self.score, True
+        else:
+            self.new_game()
+            return self.score, False
     
     def return_state(self)->list:
         """
