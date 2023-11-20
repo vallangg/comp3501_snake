@@ -238,9 +238,6 @@ class Game:
         
 
         # print(f"return_state in Snake.py. state: {return_list}")
-        # for layer in return_list:
-        #     print(layer)
-        # print()
         return_list = np.array(return_list).flatten()  # Flatten the 2D list into a 1D numpy array
         return return_list
 

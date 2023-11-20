@@ -104,7 +104,8 @@ def Train(gamma:float=0.9, epsilon:float=1, learning_rate:float = 0.75):
      game = Game()
 
      running_score = []
-
+     mean_scores = []
+     tot_score = 0
 
      while True: # loop over this as long as you want to train
           state0 = agent.get_state() # get the state of the agent
@@ -119,15 +120,17 @@ def Train(gamma:float=0.9, epsilon:float=1, learning_rate:float = 0.75):
 
           agent.cache(state0, move0, state1, score, game_over) # store the data into the memory
 
-          agent.train_long()
-          # agent.train_short(state0, move0, state1, score, game_over)
+          # agent.train_long()
+          agent.train_short(state0, move0, state1, score, game_over)
 
+          # tot_score += score
 
           if game_over: # if the game is over
                game.new_game() # start a new game
                agent.num_games += 1
                agent.train_long()
                running_score.append(score)
+               # mean_scores.append(tot_score/agent.num_games)
                Plot_Results(running_score)
 
 
@@ -139,14 +142,14 @@ def Plot_Results(scores: list): # make a function to plot the scores of the game
      display.clear_output(wait=True)
      display.display(plt.gcf())
      plt.clf()
-     plt.title('Training...')
+     plt.title('Scores for the training')
      plt.xlabel('Number of Games')
      plt.ylabel('Score')
      plt.plot(scores)
-     #     plt.plot(mean_scores)
+     # plt.plot(mean_scores)
      plt.ylim(ymin=-10)
      plt.text(len(scores)-1, scores[-1], str(scores[-1]))
-     #     plt.text(len(mean_scores)-1, mean_scores[-1], str(mean_scores[-1]))
+     # plt.text(len(mean_scores)-1, mean_scores[-1], str(mean_scores[-1]))
      plt.show(block=False)
      plt.pause(.1)
 
