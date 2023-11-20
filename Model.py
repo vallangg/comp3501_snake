@@ -67,25 +67,18 @@ class Brain(nn.Module):
 b = Brain()
 
 game = Game()
-stat = game.return_state()
-ten_stat = torch.tensor(stat, device=device).float()
-ten_stat = ten_stat.view(-1, 100) 
-# print(ten_stat)
-# X = torch.rand(1, 28, 28, device=device)
-logits = b(ten_stat)
-print("Logits: ",logits)
+
+# Testing the code to ensure the output is what we want.
+# stat = game.return_state()
+# ten_stat = torch.tensor(stat, device=device).float()
+# ten_stat = ten_stat.view(-1, 100) 
+# # print(ten_stat)
+# # X = torch.rand(1, 28, 28, device=device)
+# logits = b(ten_stat)
+# print("Logits: ",logits)
 
 
 
-pred_probab = nn.Softmax(dim=1)(logits)
-y_pred = pred_probab.argmax(1)
+# pred_probab = nn.Softmax(dim=1)(logits)
+# y_pred = pred_probab.argmax(1)
 # print(f"Predicted class: {y_pred}")
-
-# RuntimeError: mat1 and mat2 shapes cannot be multiplied (10x10 and 100x4)
-
-
-# data = [[int(i) for i in range(0,10)] for i in range(0,10)]
-# tensor = torch.tensor(data)
-# t = b.forward(tensor)
-# print(t)
-# untimeError: mat1 and mat2 must have the same dtype, but got Long and Float
