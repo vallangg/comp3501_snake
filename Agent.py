@@ -107,12 +107,13 @@ def Train(gamma:float=0.9, epsilon:float=0.5, learning_rate:float = 0.5):
 
           move0 = agent.act(state0) # get the action that the agent will take
           
-          score, game_over = game.step(move0) # run a single step of the snake game and pull the score, game_over, and new state of the step
+          game_over, score = game.step(move0) # run a single step of the snake game and pull the score, game_over, and new state of the step
           state1 = game.return_state()
           # print(f"Train in Agent.py. state0: {state0}")
 
           agent.cache(state0, move0, state1, score, game_over) # store the data into the memory
 
+          # agent.train_long()
           agent.train_short(state0, move0, state1, score, game_over)
 
           if game_over: # if the game is over
@@ -121,4 +122,4 @@ def Train(gamma:float=0.9, epsilon:float=0.5, learning_rate:float = 0.5):
                agent.train_long()
 
 
-Train()
+Train(.3,1,.3)

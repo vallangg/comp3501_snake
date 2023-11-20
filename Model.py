@@ -57,6 +57,7 @@ class Brain(nn.Module):
           # print(f"Flattened x shape: {x.shape}")  # Debugging: Check the shape after flattening
           logits = self.linear_relu_stack(x)
           return logits
+     
 
 
      
@@ -72,6 +73,8 @@ ten_stat = ten_stat.view(-1, 100)
 # X = torch.rand(1, 28, 28, device=device)
 logits = b(ten_stat)
 print("Logits: ",logits)
+
+
 
 pred_probab = nn.Softmax(dim=1)(logits)
 y_pred = pred_probab.argmax(1)
