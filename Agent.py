@@ -117,8 +117,8 @@ def Train(gamma:float=0.9, epsilon:float=0.5, learning_rate:float = 0.5):
 
           agent.cache(state0, move0, state1, score, game_over) # store the data into the memory
 
-          # agent.train_long()
-          agent.train_short(state0, move0, state1, score, game_over)
+          agent.train_long()
+          # agent.train_short(state0, move0, state1, score, game_over)
 
 
           if game_over: # if the game is over
@@ -129,7 +129,7 @@ def Train(gamma:float=0.9, epsilon:float=0.5, learning_rate:float = 0.5):
                Plot_Results(running_score)
 
 
-def Plot_Results(scores: list): # make a fuynction to plot the scores of the game
+def Plot_Results(scores: list): # make a function to plot the scores of the game
      """
      This code was taken from:
      https://www.youtube.com/watch?v=wc-FxNENg9U
