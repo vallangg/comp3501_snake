@@ -204,6 +204,7 @@ class Game:
             self.check_event()
             self.update()
             self.draw()
+            self.return_state()
         else:
             self.new_game()
     
@@ -228,7 +229,7 @@ class Game:
                 return_list[y_index][x_index] = 1  # Place a 1 where there is a snake segment
         
         if self.snake.segments:
-            head_segment = self.snake.segments[0]
+            head_segment = self.snake.segments[-1]
             head_x = int(head_segment.x / self.TILE_SIZE)
             head_y = int(head_segment.y / self.TILE_SIZE)
             if 0 <= head_x < grid_size and 0 <= head_y < grid_size:
@@ -242,7 +243,9 @@ class Game:
         
 
         # print(f"return_state in Snake.py. state: {return_list}")
-
+        # for layer in return_list:
+        #     print(layer)
+        # print()
         return_list = np.array(return_list).flatten()  # Flatten the 2D list into a 1D numpy array
         return return_list
 
@@ -251,5 +254,5 @@ class Game:
 
 
 
-# game = Game()
-# game.run()
+game = Game()
+game.run()
