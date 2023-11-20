@@ -64,8 +64,9 @@ class Agent:
                :param State: this is the state of the game that will be used to feed into the model
           """
           random_choice = random.random()
+          print(f"episolon {self.epsilon} \t rando {random_choice}")
           final_move_set = [1, 2, 3, 4] # this is what the snake will do 
-          if random_choice < self.epsilon: # if the random value is greater than the episolon than the model can act. EXPLOITATION
+          if random_choice > self.epsilon: # if the random value is greater than the episolon than the model can act. EXPLOITATION
                print('exploit')
                state = T.tensor(current_state, dtype=T.float) # change the state into a tensor for the NN to use
                actions = self.model(state) # store the actions that the NN gives back
@@ -74,7 +75,7 @@ class Agent:
           else:
                print('explore')
                final_move = random.randint(1, 4) # chose a random direction do move
-          self.epsilon -= 0.005 # if we choose a random move, decrement the epsilon value
+               self.epsilon -= 0.001 * (1/(self.num_games+10)) # if we choose a random move, decrement the epsilon value
           
           return final_move # return the action 
 

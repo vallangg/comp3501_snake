@@ -56,7 +56,7 @@ class Snake:
                 self.direction = vec2(self.size, 0)
                 self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
-    def nueral_control(self, neural_direction):
+    def neural_control(self, neural_direction):
             if neural_direction == 1:
                 self.direction = vec2(0, -self.size)
                 self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
@@ -85,8 +85,10 @@ class Snake:
 
     def check_borders(self):
         if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
+            print("hit a border")
             self.game_done = self.game.game_over()
         if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
+            print("hit a border")
             self.game_done = self.game.game_over()
 
     def check_food(self):
@@ -98,6 +100,7 @@ class Snake:
 
     def check_selfeating(self):
         if len(self.segments) != len(set(segment.center for segment in self.segments)):
+            print("hit itself")
             self.game_done = self.game.game_over()
 
     def move(self):
@@ -152,7 +155,7 @@ class Game:
         self.food = Food(self)
         # self.snake.game_done = False
     
-    def game_over(self): # CUTSOM CODE. if the game is over return the final score
+    def game_over(self): # CUTSOM CODE. if the gameww is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
         print(self.snake.score)
         return True
@@ -182,17 +185,14 @@ class Game:
             CUSTOM CODE
             This code will run a single step in the game of snake based on the Neural Networks input
         """
-        self.snake.nueral_control(neural_direction)
-        self.update()
+        self.snake.neural_control(neural_direction)
         self.check_event()
-        pg.display.flip()
-        self.clock.tick(60)
+        self.update()
         self.draw()
 
         print(f"direction chosen: {neural_direction}")
 
-        game_over, score = self.snake.game_done, self.snake.score
-        return game_over, score
+        return  self.snake.game_done, self.snake.score
 
     def run(self):
         while not self.snake.game_done:
