@@ -57,6 +57,11 @@ class Snake:
                 self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
     def neural_control(self, neural_direction):
+            """
+            CUSTOM CODE
+            Based on the output from the neural network (Brain) this function will direct the snake in the game as to which direction to move towards 
+            The code is very similar to that of the control function above.
+            """
             if neural_direction == 1:
                 self.direction = vec2(0, -self.size)
                 self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
