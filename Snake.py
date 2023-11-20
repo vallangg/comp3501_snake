@@ -85,10 +85,10 @@ class Snake:
 
     def check_borders(self):
         if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
-            print("hit a border")
+            # print("hit a border")
             self.game_done = self.game.game_over()
         if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
-            print("hit a border")
+            # print("hit a border")
             self.game_done = self.game.game_over()
 
     def check_food(self):
@@ -96,11 +96,11 @@ class Snake:
             self.game.food.rect.center = self.get_random_position()
             self.length += 1
             self.score += 20 # CUSTOM CODE. if the snake eats the food add 10 points to the score
-            print("FOOD WAS EATEN")
+            # print("FOOD WAS EATEN")
 
     def check_selfeating(self):
         if len(self.segments) != len(set(segment.center for segment in self.segments)):
-            print("hit itself")
+            # print("hit itself")
             self.game_done = self.game.game_over()
 
     def move(self):
@@ -149,7 +149,7 @@ class Game:
                                              for y in range(0, self.WINDOW_SIZE, self.TILE_SIZE)]
 
     def new_game(self):
-        print("GAME ENDED")
+        # print("GAME ENDED")
         pg.init()
         self.snake = Snake(self)
         self.food = Food(self)
@@ -157,7 +157,7 @@ class Game:
     
     def game_over(self): # CUTSOM CODE. if the gameww is over return the final score
         self.snake.score -= 10 # decrement the code if the game ends
-        print(self.snake.score)
+        # print(self.snake.score)
         return True
 
     def update(self):
@@ -190,7 +190,7 @@ class Game:
         self.update()
         self.draw()
 
-        print(f"direction chosen: {neural_direction}")
+        # print(f"direction chosen: {neural_direction}")
 
         return  self.snake.game_done, self.snake.score
 
@@ -205,7 +205,7 @@ class Game:
     def return_state(self)->list:
         """
             This code will return a list to represent the board
-            0=nothing, 1=snake, 2=food
+            0=nothing, 1=snake, 2=head, 3=food
             :param None:
             :return list: the array that represents the game board
         """
@@ -221,11 +221,19 @@ class Game:
             # print(f"Segment position: ({segment.x}, {segment.y}), Grid index: ({x_index}, {y_index})")
             if 0 <= x_index < grid_size and 0 <= y_index < grid_size:
                 return_list[y_index][x_index] = 1  # Place a 1 where there is a snake segment
+        
+        if self.snake.segments:
+            head_segment = self.snake.segments[0]
+            head_x = int(head_segment.x / self.TILE_SIZE)
+            head_y = int(head_segment.y / self.TILE_SIZE)
+            if 0 <= head_x < grid_size and 0 <= head_y < grid_size:
+                return_list[head_y][head_x] = 2  # Mark as snake head
+        
 
         food_x_index = int(self.food.rect.centerx / self.TILE_SIZE)
         food_y_index = int(self.food.rect.centery / self.TILE_SIZE)
         if 0 <= food_x_index < grid_size and 0 <= food_y_index < grid_size:
-            return_list[food_y_index][food_x_index] = 2  # Place a 2 where there is food
+            return_list[food_y_index][food_x_index] = 3  # Place a 2 where there is food
         
 
         # print(f"return_state in Snake.py. state: {return_list}")

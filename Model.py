@@ -39,6 +39,7 @@ class Brain(nn.Module):
           super().__init__() # call the parent init fucntion
           # TODO add the rest of the init of the model here
           self.flatten = nn.Flatten()
+
           self.linear_relu_stack = nn.Sequential(
                nn.Linear(input_size, hidden_size),   # 10X10 grid with hidden layers
                nn.ReLU(),
@@ -78,7 +79,7 @@ print("Logits: ",logits)
 
 pred_probab = nn.Softmax(dim=1)(logits)
 y_pred = pred_probab.argmax(1)
-print(f"Predicted class: {y_pred}")
+# print(f"Predicted class: {y_pred}")
 
 # RuntimeError: mat1 and mat2 shapes cannot be multiplied (10x10 and 100x4)
 
