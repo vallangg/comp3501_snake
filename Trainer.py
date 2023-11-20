@@ -52,8 +52,8 @@ class trainer:
                target[ii_pred][T.argmax(action).item()%4] = Q_new # update the Q table using the new value of Q that was just caluclated
           
           self.optimizer.zero_grad() # empty the gradient 
-          loss = self.loss_function(target, pred) # comapre the new Q and old one
-          loss.backward() 
+          self.loss = self.loss_function(target, pred) # comapre the new Q and old one
+          self.loss.backward() 
           
           self.optimizer.step()
 

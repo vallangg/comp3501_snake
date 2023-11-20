@@ -29,7 +29,7 @@ class Agent:
           https://www.youtube.com/watch?v=wc-FxNENg9U
      """
 
-     def __init__(self, gamma, epislon, learning_rate):
+     def __init__(self, gamma: float =0.6, epislon: float =1, learning_rate: float = 0.5):
           self.num_games = 0 # keep track ofthe number of games that has been run
           self.epsilon = epislon # measure of randomness in decision making
           self.gamma = gamma # weighting for rewards
@@ -69,20 +69,21 @@ class Agent:
           # print(f"episolon {self.epsilon} \t rando {random_choice}")
           final_move_set = [1, 2, 3, 4] # this is what the snake will do 
           if random_choice > self.epsilon: # if the random value is greater than the episolon than the model can act. EXPLOITATION
-               # print('exploit')
+               print('exploit')
                state = T.tensor(current_state, dtype=T.float) # change the state into a tensor for the NN to use
                actions = self.model(state) # store the actions that the NN gives back
                choice = T.argmax(actions).item() # take the value that is the highest from the NN
                final_move = final_move_set[choice]
           else:
-               # print('explore')
+               print('explore')
                final_move = random.randint(1, 4) # chose a random direction do move
-               self.epsilon -= 0.001 * (1/(self.num_games+1)) # if we choose a random move, decrement the epsilon value
+          self.epsilon -= 0.001 * (1/(self.num_games+1)) # if we choose a random move, decrement the epsilon value
           
           return final_move # return the action 
 
 
      def train_long(self):
+          print(f"len mem: {len(self.memory)}")
           if len(self.memory) > 1000: # if the length of the memory excedes 1,000 then we can pull a large batch of data from the memory to train from
                sample = random.sample(self.memory, 1000) # take a sample from memory
           else:
@@ -96,13 +97,14 @@ class Agent:
           self.trainer.train_step(state, action, next_state, score, game_over)
 
      
-def Train(gamma:float=0.9, epsilon:float=0.5, learning_rate:float = 0.5):
+def Train(gamma:float=0.9, epsilon:float=1, learning_rate:float = 0.75):
      
      # define all the nodes that you need
      agent = Agent(gamma, epsilon, learning_rate)
      game = Game()
 
      running_score = []
+
 
      while True: # loop over this as long as you want to train
           state0 = agent.get_state() # get the state of the agent
@@ -152,4 +154,4 @@ def Plot_Results(scores: list): # make a fuynction to plot the scores of the gam
 
 
 
-Train(.3,0.9,1)
+Train()
