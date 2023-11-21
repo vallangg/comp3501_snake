@@ -37,14 +37,15 @@ class Brain(nn.Module):
           hidden_size = 215
           output_size = 4
           super().__init__() # call the parent init fucntion
-          # TODO add the rest of the init of the model here
           self.flatten = nn.Flatten()
 
           self.linear_relu_stack = nn.Sequential(
                nn.Linear(input_size, hidden_size),   # 10X10 grid with hidden layers
                nn.ReLU(),
-               nn.Linear(hidden_size, hidden_size),   #Hidden layers
+               nn.Linear(hidden_size, hidden_size),   #Hidden layer
                nn.ReLU(),
+               nn.Linear(hidden_size, hidden_size), # second hidden layer
+               nn.ReLU(), 
                nn.Linear(hidden_size, output_size),  #Hidden Layers and 4 directions to move in
           )
 
