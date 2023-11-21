@@ -14,3 +14,5 @@ Snake.py contains the code that will visually display the game of Snake along wi
 Model.py contains the neural network model that the following files will use. 
 Agent.py contains functions that will assit the Trainer.py file in learning. 
 The Trainer.py files contains the functions that will does the training and runs the Snake game.
+
+### To run this program, open the Trainer.py file and hit run.
