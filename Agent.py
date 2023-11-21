@@ -29,7 +29,7 @@ class Agent:
           https://www.youtube.com/watch?v=wc-FxNENg9U
      """
 
-     def __init__(self, gamma: float =0.6, epislon: float =1, learning_rate: float = 0.5):
+     def __init__(self, gamma: float =0.6, epislon: float =1, learning_rate: float = 0.005):
           self.num_games = 0 # keep track ofthe number of games that has been run
           self.epsilon = epislon # measure of randomness in decision making
           self.gamma = gamma # weighting for rewards
@@ -77,7 +77,7 @@ class Agent:
           else:
                print('explore')
                final_move = random.randint(1, 4) # chose a random direction do move
-          self.epsilon -= 0.001 * (1/(self.num_games+1)) # if we choose a random move, decrement the epsilon value
+          self.epsilon -= 0.001 * (1/(self.num_games+100)) # if we choose a random move, decrement the epsilon value
           print(f"epsilon: {self.epsilon}")
           return final_move # return the action 
 
@@ -97,7 +97,7 @@ class Agent:
           self.trainer.train_step(state, action, next_state, score, game_over)
 
      
-def Train(gamma:float=0.9, epsilon:float=1, learning_rate:float = 0.75):
+def Train(gamma:float=0.9, epsilon:float=0.75, learning_rate:float = 0.75):
      
      # define all the nodes that you need
      agent = Agent(gamma, epsilon, learning_rate)
@@ -105,6 +105,7 @@ def Train(gamma:float=0.9, epsilon:float=1, learning_rate:float = 0.75):
 
      running_score = []
      mean_scores = []
+     running_games = []
      tot_score = 0
 
      while True: # loop over this as long as you want to train
@@ -123,18 +124,18 @@ def Train(gamma:float=0.9, epsilon:float=1, learning_rate:float = 0.75):
           # agent.train_long()
           agent.train_short(state0, move0, state1, score, game_over)
 
-          # tot_score += score
-
           if game_over: # if the game is over
+               tot_score += score
                game.new_game() # start a new game
                agent.num_games += 1
                agent.train_long()
                running_score.append(score)
-               # mean_scores.append(tot_score/agent.num_games)
-               Plot_Results(running_score)
+               mean_scores.append(tot_score/agent.num_games)
+               running_games.append(agent.num_games)
+               Plot_Results(running_score, mean_scores, running_games)
 
 
-def Plot_Results(scores: list): # make a function to plot the scores of the game
+def Plot_Results(scores: list, mean_scores, running_games): # make a function to plot the scores of the game
      """
      This code was taken from:
      https://www.youtube.com/watch?v=wc-FxNENg9U
@@ -145,11 +146,11 @@ def Plot_Results(scores: list): # make a function to plot the scores of the game
      plt.title('Scores for the training')
      plt.xlabel('Number of Games')
      plt.ylabel('Score')
-     plt.plot(scores)
-     # plt.plot(mean_scores)
-     plt.ylim(ymin=-10)
+     plt.scatter(running_games, scores)
+     plt.plot(mean_scores, color="red")
+     plt.ylim(ymin=-15)
      plt.text(len(scores)-1, scores[-1], str(scores[-1]))
-     # plt.text(len(mean_scores)-1, mean_scores[-1], str(mean_scores[-1]))
+     plt.text(len(mean_scores)-1, mean_scores[-1], str(mean_scores[-1]))
      plt.show(block=False)
      plt.pause(.1)
 
@@ -157,4 +158,4 @@ def Plot_Results(scores: list): # make a function to plot the scores of the game
 
 
 
-Train(epsilon=0)
+Train()

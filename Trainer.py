@@ -8,6 +8,7 @@ import torch.optim as optim # import the optimizer function
 import torch.nn.functional as F # import this helper function
 import numpy as np
 from Snake import Game
+from torch.optim.lr_scheduler import ReduceLROnPlateau # import the function that will be used to change the learning rate over time
 
 class trainer:
      """
@@ -23,6 +24,11 @@ class trainer:
           self.model = model
           self.optimizer = optim.Adam(self.model.parameters(), self.lr)# this is the optimizer function
           self.loss_function = nn.MSELoss() # define the loss fucntion
+
+          # add the learning rate scheduler
+          self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=gamma, patience=10, verbose=True) # create the fucntion that will dictate how much the lr will change, use gamma for the factor
+          self.cumulative_loss = 0 # keep track of the cumulative loss
+          self.game_count = 0 # keep track of the number of games that have been run so far
  
      def train_step(self, state, action, next_state, score, game_over):
           # print(f"State in Trainer: {state}")
@@ -41,7 +47,7 @@ class trainer:
           pred = self.model(state) # generate the predicted Q values from the state
 
           target = pred.clone() 
-          print(score)
+          # print(score)
 
           for ii_pred in range(len(game_over)):
                # print("Trainer in Trainer.py. target: ", target[ii_pred])
@@ -58,4 +64,15 @@ class trainer:
           self.loss.backward() 
           
           self.optimizer.step()
+
+          self.cumulative_loss += self.loss
+          self.game_count += 1
+
+          if self.game_count == 10:
+               average_loss = self.cumulative_loss / 10
+               self.scheduler.step(average_loss) # step the learning rate
+
+               #reset the values
+               self.cumulative_loss = 0
+               self.game_count = 0
 
