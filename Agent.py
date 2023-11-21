@@ -77,7 +77,7 @@ class Agent:
           else:
                print('explore')
                final_move = random.randint(1, 4) # chose a random direction do move
-          self.epsilon -= 0.001 * (1/(self.num_games+100)) # if we choose a random move, decrement the epsilon value
+          self.epsilon -= 0.001 * (1/(self.num_games+10)) # if we choose a random move, decrement the epsilon value
           print(f"epsilon: {self.epsilon}")
           return final_move # return the action 
 

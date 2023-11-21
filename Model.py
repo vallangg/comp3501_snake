@@ -34,7 +34,7 @@ class Brain(nn.Module):
 
      def __init__(self):
           input_size = 100
-          hidden_size = 512
+          hidden_size = 100
           output_size = 4
           super().__init__() # call the parent init fucntion
           self.flatten = nn.Flatten()
