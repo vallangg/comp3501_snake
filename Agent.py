@@ -157,4 +157,4 @@ def Plot_Results(scores: list): # make a function to plot the scores of the game
 
 
 
-Train()
+Train(epsilon=0)

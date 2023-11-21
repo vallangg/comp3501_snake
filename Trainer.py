@@ -41,10 +41,12 @@ class trainer:
           pred = self.model(state) # generate the predicted Q values from the state
 
           target = pred.clone() 
+          print(score)
 
           for ii_pred in range(len(game_over)):
                # print("Trainer in Trainer.py. target: ", target[ii_pred])
                Q_new = score[ii_pred]
+               # print("q", Q_new)
                if not game_over[ii_pred]:
                     Q_new = score[ii_pred] + self.gamma * T.max(self.model(next_state[ii_pred])) # compute the Q value
                

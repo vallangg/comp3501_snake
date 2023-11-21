@@ -34,7 +34,7 @@ class Brain(nn.Module):
 
      def __init__(self):
           input_size = 100
-          hidden_size = 215
+          hidden_size = 512
           output_size = 4
           super().__init__() # call the parent init fucntion
           self.flatten = nn.Flatten()
@@ -65,14 +65,14 @@ class Brain(nn.Module):
      
 
 
-b = Brain()
+# b = Brain()
 
-game = Game()
+# game = Game()
 
-# Testing the code to ensure the output is what we want.
+# # Testing the code to ensure the output is what we want.
 # stat = game.return_state()
 # ten_stat = torch.tensor(stat, device=device).float()
-# ten_stat = ten_stat.view(-1, 100) 
+# # ten_stat = ten_stat.view(-1, 100) 
 # # print(ten_stat)
 # # X = torch.rand(1, 28, 28, device=device)
 # logits = b(ten_stat)
